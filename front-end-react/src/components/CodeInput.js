@@ -12,6 +12,7 @@ function CodeInput() {
     const [server_response, setResponse] = useState(null)
     const [open, setOpen] = useState(false);
 
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -50,7 +51,6 @@ function CodeInput() {
 
     return (
         <>
-        {console.log(localStorage.getItem("current_state"))}
             <div className='container'>
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

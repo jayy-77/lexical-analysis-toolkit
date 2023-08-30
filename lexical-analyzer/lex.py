@@ -18,7 +18,7 @@ class UsTime:
         print(self.us)
 
 
-def show():
+def show(number):
     ind_obj = IndianTime("2023")
     print(ind_obj.displayTime())
 

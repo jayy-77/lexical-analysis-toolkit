@@ -156,7 +156,10 @@ async function analysis(code) {
             def_name = def_split[def_split.length - 1].replace(":", "").trim()
             parameter_string = code[i].slice(index_l + 1, index_r)
             def_parameters = parameter_string.split(",")
-            public_methods[def_name] = def_parameters
+            public_methods[def_name] = {
+                def_parameters,
+                description: "no - description"
+            }
         }
 
         if (except_pos != -1) {

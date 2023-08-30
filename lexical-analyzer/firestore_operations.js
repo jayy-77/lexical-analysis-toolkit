@@ -19,8 +19,15 @@ const documentation_ref = db.collection("Documentation")
 
 router.post('/store', async (req, res) => {
     code_structure = req.body.code_structure
-    const reponse = await documentation_ref.add(code_structure)
-    res.send(reponse)
+    const response = await documentation_ref.add(code_structure)
+    res.send(response)
+})
+
+router.post("/document", async (req, res) =>{
+    doc_id = req.body.doc_id
+    doc_ref = documentation_ref.doc(doc_id)
+    document_data = await doc_ref.get()
+    res.send(document_data.data())
 })
 
 module.exports = router

@@ -6,6 +6,9 @@ import CodeInput from './components/CodeInput';
 import { BrowserRouter as Router, Route, Routes, Link, NavLink } from 'react-router-dom'
 import LexicalAnalysisTable from './components/LexicalAnalysisTable';
 import LexicalDocumentation from './components/LexicalDocumentation';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import Mediator from './components/Mediator';
 
 function App() {
 
@@ -16,11 +19,11 @@ function App() {
       <Router>
 
         <Navbar />
-
         <Routes>
-          <Route path="/" element = {<CodeInput />} />
-          <Route path="/lexical-analysis-table" element = {<LexicalAnalysisTable />} />
-          <Route path="/lexical-documentation" element = {<LexicalDocumentation />} />
+          <Route path="/" element={<CodeInput />} />
+          <Route path="/*" element={<Mediator doc_id = {window.location.pathname.split("/")[1]}/>} />
+          <Route path="/lexical-analysis-table" element={<LexicalAnalysisTable />} />
+          <Route path="/lexical-documentation" element={<LexicalDocumentation />} />
         </Routes>
 
       </Router>
