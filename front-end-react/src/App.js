@@ -17,15 +17,16 @@ function App() {
   return (
     <>
       <Router>
-
         <Navbar />
-        <Routes>
-          <Route path="/" element={<CodeInput />} />
-          <Route path="/*" element={<Mediator doc_id = {window.location.pathname.split("/")[1]}/>} />
-          <Route path="/lexical-analysis-table" element={<LexicalAnalysisTable />} />
-          <Route path="/lexical-documentation" element={<LexicalDocumentation />} />
-        </Routes>
 
+        <div className='container'>
+          <Routes>
+              <Route path="/" element={<CodeInput />} />
+              <Route path="/*" element={<Mediator doc_id={window.location.pathname.split("/")[1]} />} />
+              <Route path="/lexical-analysis-table" element={<LexicalAnalysisTable />} />
+              <Route path="/lexical-documentation" element={<LexicalDocumentation />} />
+          </Routes>
+        </div>
       </Router>
 
       <Footer />
