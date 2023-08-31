@@ -117,7 +117,8 @@ async function analysis(code) {
                         class_data[code[i].slice(6, code[i].indexOf(":"))].push({
                             constructor: constructor_string.slice(0, constructor_string.indexOf("(")) + "()",
                             constructor_parameters: constructor_string.slice(index_1, index_2).split(","),
-                            construcor_description: "no - description"
+                            construcor_description: "no - description",
+                            id: Math.random().toString(36).substring(2, 12)
                         })
                     }
                     def_pos = class_line.search("def")
@@ -134,7 +135,8 @@ async function analysis(code) {
                         class_data[code[i].slice(6, code[i].indexOf(":"))].push({
                             class_method,
                             class_method_parameters,
-                            class_method_description
+                            class_method_description,
+                            id: Math.random().toString(36).substring(2, 12)
                         })
                     }
                 } else { break }

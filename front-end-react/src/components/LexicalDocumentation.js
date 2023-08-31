@@ -14,6 +14,9 @@ function LexicalDocumentation(props) {
     const [edit, setEdit] = useState(false)
     const [description, setDescription] = useState("")
     const [doc_id, setDocId] = useState("")
+    const [current_index, setCurrentIndex] = useState(null)
+    const [bulk_edit, setBulkEdit] = useState({})
+    const [bulk_flag, setBulkFlag] = useState(false)
 
     function http_firestore() {
         axios.post('http://localhost:3002/store', { code_structure: data })
@@ -42,9 +45,10 @@ function LexicalDocumentation(props) {
                     <span className="m-2"><FontAwesomeIcon icon={faCloudUploadAlt} /></span>
                     Store on Cloud
                 </button>
-                <buton className={`btn btn${edit ? '' : '-outline'}-info`} onClick={() => setEdit(!edit)}>
+
+                <buton className={`btn btn${bulk_flag ? '' : '-outline'}-info`} onClick={() => setBulkFlag(!bulk_flag)}>
                     <span className="m-2"><FontAwesomeIcon icon={faEdit} /></span>
-                    {edit ? "Close" : "Edit"}
+                    {bulk_flag ? "Save" : "Edit"}
                 </buton>
             </div>
 
@@ -90,7 +94,7 @@ function LexicalDocumentation(props) {
                                     There is no package methods in code.
                                 </div>}
                             {
-                                Object.keys(data.code_structure[package_name]["methods"]).map((item) => (
+                                Object.keys(data.code_structure[package_name]["methods"]).map((item, index) => (
                                     <div className="card mt-3 text-light bg-dark" key={item}>
                                         <h5 className="card-header bg-secondary">{data.code_structure[package_name]["methods"][item]["type"]}</h5>
                                         <div className="card-body bg-dark">
@@ -102,16 +106,16 @@ function LexicalDocumentation(props) {
                                                 }
                                             </div>
 
-                                            {(!edit && data.code_structure[package_name]["methods"][item]["description"] === 'no-description')
+                                            {((!edit && !bulk_flag) && data.code_structure[package_name]["methods"][item]["description"] === 'no-description')
                                                 &&
-                                                (<button class="btn btn-primary" onClick={() => setEdit(true)}>ADD DESCRIPTION</button>)}
-
-                                            {edit && (<div className="mt-3">
+                                            (<button class="btn btn-primary" onClick={() => {setEdit(true); setCurrentIndex(index);}}>ADD DESCRIPTION</button>)}
+                                            {(edit && current_index === index) && (<div className="mt-3">
                                                 <input type="text" class="form-control" placeholder={`description for ${package_name}`} onChange={(e) => setDescription(e.target.value)} />
                                                 <button className="btn btn-success mt-3 w-100" onClick={() => {
                                                     setEdit(false)
                                                     data.code_structure[package_name]["methods"][item]["description"] = description
                                                     setDescription("")
+                                                    setCurrentIndex("")
                                                 }} >Set</button>
                                             </div>)}
                                         </div>
@@ -153,32 +157,48 @@ function LexicalDocumentation(props) {
                             Object.keys(data.class_data).map((item) => {
                                 if (item !== 'in_buil_methods') {
                                     return Object.keys(data.class_data[item]).map((member, index) => (
+                                
                                         <div className="card mt-3 bg-dark text-light" key={member}>
                                             <h5 className="card-header bg-secondary"><span className="text-warning">Class: </span>{item}</h5>
                                             <h5 className="card-header bg-secondary"><span className="text-warning">
                                                 {index === 0 ? "Constructor: " : "Class Method: "} </span>{data.class_data[item][member][index === 0 ? "constructor" : "class_method"]}
                                             </h5>
                                             <div className="card-body bg-dark">
-                                                <h5 className="card-title"><span className="text-info">
-                                                    {index === 0 ? "Constructor Parameters: " : "Class method parameters: "}</span>{data.class_data[item][member][index === 0 ? "constructor_parameters" : "class_method_parameters"].join(", ")}
+
+                                                <h5 className="card-title">
+                                                    <span className="text-info">{index === 0 ? "Constructor Parameters: " : "Class method parameters: "}</span>
+                                                    {data.class_data[item][member][index === 0 ? "constructor_parameters" : "class_method_parameters"].join(", ")}
                                                 </h5>
 
                                                 <p class="card-text">
                                                     {index === 0 ? data.class_data[item][member]["construcor_description"] : data.class_data[item][member]["class_method_description"]}
                                                 </p>
 
-                                                {(!edit && data.class_data[item][member][index === 0 ? "construcor_description" : "class_method_description"] === 'no - description')
+                                                {((!edit && !bulk_flag) && data.class_data[item][member][index === 0 ? "construcor_description" : "class_method_description"] === 'no - description')
                                                     &&
-                                                    (<button class="btn btn-primary" onClick={() => setEdit(true)}>ADD DESCRIPTION</button>)}
+                                                (<button class="btn btn-primary" onClick={() => {setEdit(true); setCurrentIndex(data.class_data[item][member]["id"])}}>ADD DESCRIPTION</button>)}
 
-                                                {edit && (
+                                                {(!bulk_flag && !edit && bulk_edit[data.class_data[item][member]["id"]]) ? data.class_data[item][member][index === 0 ? "construcor_description" : "class_method_description"] = bulk_edit[data.class_data[item][member]["id"]] : null}
+
+                                                {((edit && current_index === data.class_data[item][member]["id"]) || bulk_flag) && (
                                                     <div className="mt-3">
-                                                        <input type="text" class="form-control" placeholder={`description for ${item} class`} onChange={(e) => setDescription(e.target.value)} />
+
+                                                        <input type="text" class="form-control" placeholder={`description for ${item} class`} onChange={(e) => {
+                                                            const id = data.class_data[item][member]["id"]
+                                                            setDescription(e.target.value); 
+                                                            setBulkEdit(edit => ({
+                                                                ...edit,
+                                                                ...{[id]: e.target.value}
+                                                            }))
+                                                        }} />
+
+                                                       {(!bulk_flag && edit) && 
                                                         <button className="btn btn-success mt-3 w-100" onClick={() => {
                                                             setEdit(false)
                                                             setDescription("")
+                                                            setBulkFlag(false)
                                                             data.class_data[item][member][index === 0 ? "construcor_description" : "class_method_description"] = description
-                                                        }} >Set</button>
+                                                        }} >Set</button>}
                                                     </div>
                                                 )}
                                             </div>
