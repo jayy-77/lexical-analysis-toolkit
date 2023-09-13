@@ -28,7 +28,7 @@ function LexicalDocumentation(props) {
         data && (<div className="container-fluid mt-5">
             {doc_id && (
                 <div class="alert alert-success" role="alert">
-                    Your code documentation stored successfully at <a href={`http://localhost:3000/${doc_id}`} target="blank" class="alert-link">http://localhost:3000/{doc_id}</a>. Give it a look if you like.
+                    Your code documentation stored successfully at <a href={`http://localhost:3000/${doc_id}`} target="blank" className="alert-link text-primary">http://localhost:3000/{doc_id}</a>. Give it a look if you like.
                     <FontAwesomeIcon size="2x" icon={faTimes} className="float-end" onClick={() => setDocId("")} />
                 </div>
             )}
@@ -41,9 +41,9 @@ function LexicalDocumentation(props) {
             </div>
 
             <div className="btn-group d-flex mt-3" role="group">
-                <button className="btn btn-outline-info" onClick={http_firestore}>
+                <button className={`btn btn${doc_id ? '' : '-outline'}-info`} onClick={http_firestore}>
                     <span className="m-2"><FontAwesomeIcon icon={faCloudUploadAlt} /></span>
-                    Store on Cloud
+                    Store{doc_id && 'd'} on Cloud
                 </button>
 
                 <buton className={`btn btn${bulk_flag ? '' : '-outline'}-info`} onClick={() => setBulkFlag(!bulk_flag)}>
@@ -171,7 +171,7 @@ function LexicalDocumentation(props) {
                                                 </h5>
 
                                                 <p class="card-text">
-                                                    {index === 0 ? data.class_data[item][member]["construcor_description"] : data.class_data[item][member]["class_method_description"]}
+                                                    {data.class_data[item][member][index === 0 ? "construcor_description" : "class_method_description"]}
                                                 </p>
 
                                                 {((!edit && !bulk_flag) && data.class_data[item][member][index === 0 ? "construcor_description" : "class_method_description"] === 'no - description')

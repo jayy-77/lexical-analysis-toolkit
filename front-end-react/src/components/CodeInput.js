@@ -5,13 +5,17 @@ import axios from 'axios'
 import LexicalAnalysisTable from './LexicalAnalysisTable';
 import LexicalDocumentation from './LexicalDocumentation';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeTab, selectTab } from '../features/tabs/tabsSlicer';
 
 function CodeInput() {
     const [text, setText] = useState('')
     const [state, setState] = useState('code_input')
     const [server_response, setResponse] = useState(null)
     const [open, setOpen] = useState(false);
-
+    const tab = useSelector(selectTab)
+    const dispatch = useDispatch()
+    const [tabName, setTabName] = useState("")
 
     const handleClose = () => {
         setOpen(false);
@@ -45,7 +49,7 @@ function CodeInput() {
         handleOpen()
     }
 
-    
+
 
     var code_style = { backgroundImage: `url('code-back.svg')`, backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }
 
@@ -62,8 +66,17 @@ function CodeInput() {
                 {state === 'code_input' && (<>
                     <textarea onChange={code_input} className="form-control border-primary bg-dark text-light mt-5" rows="25" style={!text ? code_style : null}></textarea>
                     <div class="btn-group d-flex mt-3" role="group" aria-label="Basic outlined example">
-                        <button type="button" className="btn btn-outline-primary" onClick={token_table_req} > Lexical Analysis Table </button>
-                        <button type="button" className="btn btn-outline-primary" onClick={doc_generator_req}> Doc Generator </button>
+
+                        <button type="button" className="btn btn-outline-primary" onClick={() => {
+                            dispatch(changeTab("lat"))
+                            token_table_req()
+                        }}> Lexical Analysis Table </button>
+
+                        <button type="button" className="btn btn-outline-primary" onClick={() => {
+                            doc_generator_req()
+                            dispatch(changeTab("dg"))
+                        }}> Doc Generator </button>
+
                         <input type="file" className="btn btn-outline-primary" />
                     </div>
                 </>)}
