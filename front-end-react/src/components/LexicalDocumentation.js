@@ -105,6 +105,7 @@ function LexicalDocumentation(props) {
                                                 }
                                             </div>
 
+
                                             {((!edit && !bulk_flag) && data.code_structure[package_name]["methods"][item]["description"] === 'no-description')
                                                 &&
                                             (<button class="btn btn-primary" onClick={() => {setEdit(true); setCurrentIndex(index);}}>ADD DESCRIPTION</button>)}

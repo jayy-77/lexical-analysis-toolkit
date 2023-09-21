@@ -18,7 +18,6 @@ function App() {
     <>
       <Router>
         <Navbar />
-
         <div className='container'>
           <Routes>
               <Route path="/" element={<CodeInput />} />
