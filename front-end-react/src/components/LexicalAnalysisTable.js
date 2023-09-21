@@ -17,7 +17,7 @@ function LexicalAnalysisTable(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item) => (
+                        {data && data.map((item) => (
                             <tr key={item.line}>
                                 <td>{item.line}</td>
                                 <td>{item.token}</td>

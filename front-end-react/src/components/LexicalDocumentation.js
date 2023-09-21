@@ -3,12 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudUploadAlt, faTimes, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { List, ListItem, ListItemText } from '@mui/material';
 import axios from "axios";
-
 function LexicalDocumentation(props) {
     const [data, setData] = useState(props.data)
     const [state, setState] = useState('package')
     const package_list = Object.keys(data.code_structure)
-    const [package_name, setPackage] = useState(package_list[0])
+    const [package_name, setPackage] =useState(package_list[0])
     const [packageTab, setPackageTab] = useState("methods")
     const [classTab, setClassTab] = useState("class_data")
     const [edit, setEdit] = useState(false)
@@ -51,12 +50,11 @@ function LexicalDocumentation(props) {
                     {bulk_flag ? "Save" : "Edit"}
                 </buton>
             </div>
-
             {state === "package" && (<>
                 <div className="mt-3 border border-primary" style={{ backgroundColor: "#131313", maxHeight: '700px', overflowY: 'auto' }}>
                     {state === 'package' && (<div className="p-3 btn-group d-flex">
                         {
-                            package_list.map((item) => {
+                            package_list && package_list.map((item) => {
                                 return <>
                                     <button className={package_name === item ? "btn btn-success" : "btn btn-outline-success"} onClick={() => setPackage(item)}>{item}</button>
                                 </>

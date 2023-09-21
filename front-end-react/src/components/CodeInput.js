@@ -7,6 +7,7 @@ import LexicalDocumentation from './LexicalDocumentation';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeTab, selectTab } from '../features/tabs/tabsSlicer';
+import { changeCode, selectCode } from '../features/tabs/codeSlicer';
 
 function CodeInput() {
     const [text, setText] = useState('')
@@ -14,6 +15,7 @@ function CodeInput() {
     const [server_response, setResponse] = useState(null)
     const [open, setOpen] = useState(false);
     const tab = useSelector(selectTab)
+    const code = useSelector(selectCode)
     const dispatch = useDispatch()
     const [tabName, setTabName] = useState("")
 
@@ -25,6 +27,7 @@ function CodeInput() {
     };
     function code_input(e) {
         setText(e.target.value)
+        dispatch(changeCode(e.target.value))
     }
 
     function http_request(end_point) {
@@ -63,18 +66,18 @@ function CodeInput() {
                 >
                     <CircularProgress color="inherit" />
                 </Backdrop>
-                {state === 'code_input' && (<>
-                    <textarea onChange={code_input} className="form-control border-primary bg-dark text-light mt-5" rows="25" style={!text ? code_style : null}></textarea>
+                {tab === 'code_input' && (<>
+                    <textarea onChange={code_input} value={code} className="form-control border-primary bg-dark text-light mt-5" rows="25" style={!text ? code_style : null}></textarea>
                     <div class="btn-group d-flex mt-3" role="group" aria-label="Basic outlined example">
 
                         <button type="button" className="btn btn-outline-primary" onClick={() => {
-                            dispatch(changeTab("lat"))
+                            dispatch(changeTab("Lexical Analysis Table"))
                             token_table_req()
                         }}> Lexical Analysis Table </button>
 
                         <button type="button" className="btn btn-outline-primary" onClick={() => {
                             doc_generator_req()
-                            dispatch(changeTab("dg"))
+                            dispatch(changeTab("Lexical Documentation"))
                         }}> Doc Generator </button>
 
                         <input type="file" className="btn btn-outline-primary" />
@@ -83,6 +86,7 @@ function CodeInput() {
 
                 {state === 'lexical-analysis' && <LexicalAnalysisTable data={server_response} />}
                 {state === 'doc_generator' && <LexicalDocumentation data={server_response} />}
+                {console.log(tab)}
             </div>
         </>
     )
