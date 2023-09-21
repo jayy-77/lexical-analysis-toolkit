@@ -27,5 +27,6 @@
 
     show()
     t1 = time.ctime()
+    
     t1.display()
     print(time.ctime())

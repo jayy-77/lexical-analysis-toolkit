@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 
 function LexicalAnalysisTable(props) {
     const data = props.data
+        
     return (
         <>
             <h4 className='text-primary mt-3 p-3'>Lexical Analysis Table</h4>
